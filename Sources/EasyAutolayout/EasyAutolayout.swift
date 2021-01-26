@@ -1,6 +1,9 @@
 import UIKit
 
 public protocol ViewPin {
+
+    var constraints: [NSLayoutConstraint] { get }
+
     @discardableResult
     func edges(_ edges: UIRectEdge, to target: UIView, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin
 
@@ -160,8 +163,9 @@ public extension ViewPin {
 
 private final class ViewPinImpl: ViewPin {
 
+    var constraints: [NSLayoutConstraint] = []
+
     private let source: UIView
-    private var constraints: [NSLayoutConstraint] = []
 
     deinit {
         NSLayoutConstraint.activate(constraints)
