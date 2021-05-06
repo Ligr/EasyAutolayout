@@ -2,14 +2,14 @@
 
 ### This:
 ```swift
-view.translatesAutoresizingMaskIntoConstraints = false
-view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-view.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.37).isActive = true
-view.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-view.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+subView.translatesAutoresizingMaskIntoConstraints = false
+subView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+subView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.37).isActive = true
+subView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+subView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 ```
 
 ### Can be cahnged to this:
 ```swift
-view.pin.top(to: view).height(to: view, multiplier: 0.37).width(to: view).centerX(in: view)
+subView.pin.top(to: view).height(to: view, multiplier: 0.37).width(to: view).centerX(in: view)
 ```
