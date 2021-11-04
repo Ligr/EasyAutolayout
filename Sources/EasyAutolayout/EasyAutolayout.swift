@@ -1,41 +1,47 @@
 import UIKit
 
+public enum LayoutPinRelation: Int {
+    case equal
+    case greater
+    case less
+}
+
 public protocol ViewPin {
 
     var constraints: [NSLayoutConstraint] { get }
 
     @discardableResult
-    func edges(_ edges: UIRectEdge, to target: LayoutArea, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin
+    func edges(_ edges: UIRectEdge, to target: LayoutArea, insets: UIEdgeInsets, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func leading(to target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func leading(to target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func trailing(to target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func trailing(to target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func top(to target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func top(to target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func bottom(to target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func bottom(to target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func above(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func above(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func below(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func below(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func before(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func before(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func after(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func after(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
     func width(to target: LayoutArea, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func width(to constant: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func width(to constant: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
     func height(toWidth target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin
@@ -44,7 +50,7 @@ public protocol ViewPin {
     func height(to target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
-    func height(to constant: CGFloat, priority: UILayoutPriority?) -> ViewPin
+    func height(to constant: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
     func size(to size: CGSize, priority: UILayoutPriority?) -> ViewPin
@@ -65,48 +71,48 @@ public protocol ViewPin {
 public extension ViewPin {
 
     @discardableResult
-    func edges(_ edges: UIRectEdge = .all, to target: LayoutArea, insets: UIEdgeInsets = .zero, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.edges(edges, to: target, insets: insets, priority: priority)
+    func edges(_ edges: UIRectEdge = .all, to target: LayoutArea, insets: UIEdgeInsets = .zero, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.edges(edges, to: target, insets: insets, relation: relation, priority: priority)
     }
 
     @discardableResult
-    func leading(to target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.edges(.left, to: target, insets: .init(top: 0, left: offset, bottom: 0, right: 0), priority: priority)
+    func leading(to target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.edges(.left, to: target, insets: .init(top: 0, left: offset, bottom: 0, right: 0), relation: relation, priority: priority)
     }
 
     @discardableResult
-    func trailing(to target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.edges(.right, to: target, insets: .init(top: 0, left: 0, bottom: 0, right: offset), priority: priority)
+    func trailing(to target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.edges(.right, to: target, insets: .init(top: 0, left: 0, bottom: 0, right: offset), relation: relation, priority: priority)
     }
 
     @discardableResult
-    func top(to target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.edges(.top, to: target, insets: .init(top: offset, left: 0, bottom: 0, right: 0), priority: priority)
+    func top(to target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.edges(.top, to: target, insets: .init(top: offset, left: 0, bottom: 0, right: 0), relation: relation, priority: priority)
     }
 
     @discardableResult
-    func bottom(to target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.edges(.bottom, to: target, insets: .init(top: 0, left: 0, bottom: offset, right: 0), priority: priority)
+    func bottom(to target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.edges(.bottom, to: target, insets: .init(top: 0, left: 0, bottom: offset, right: 0), relation: relation, priority: priority)
     }
 
     @discardableResult
-    func above(of target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.above(of: target, offset: offset, priority: priority)
+    func above(of target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.above(of: target, offset: offset, relation: relation, priority: priority)
     }
 
     @discardableResult
-    func below(of target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.below(of: target, offset: offset, priority: priority)
+    func below(of target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.below(of: target, offset: offset, relation: relation, priority: priority)
     }
 
     @discardableResult
-    func before(of target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.before(of: target, offset: offset, priority: priority)
+    func before(of target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.before(of: target, offset: offset, relation: relation, priority: priority)
     }
 
     @discardableResult
-    func after(of target: LayoutArea, offset: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.after(of: target, offset: offset, priority: priority)
+    func after(of target: LayoutArea, offset: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.after(of: target, offset: offset, relation: relation, priority: priority)
     }
 
     @discardableResult
@@ -115,8 +121,8 @@ public extension ViewPin {
     }
 
     @discardableResult
-    func width(to constant: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.width(to: constant, priority: priority)
+    func width(to constant: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.width(to: constant, relation: relation, priority: priority)
     }
 
     @discardableResult
@@ -130,8 +136,8 @@ public extension ViewPin {
     }
 
     @discardableResult
-    func height(to constant: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
-        self.height(to: constant, priority: priority)
+    func height(to constant: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.height(to: constant, relation: relation, priority: priority)
     }
 
     @discardableResult
@@ -176,50 +182,50 @@ private final class ViewPinImpl: ViewPin {
         source.translatesAutoresizingMaskIntoConstraints = false
     }
 
-    func edges(_ edges: UIRectEdge, to target: LayoutArea, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin {
+    func edges(_ edges: UIRectEdge, to target: LayoutArea, insets: UIEdgeInsets, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
         var edges = edges
         if edges.contains(.all) {
             edges = [.left, .right, .top, .bottom]
         }
         if edges.contains(.left) {
-            let constraint = source.leadingAnchor.constraint(equalTo: target.leadingAnchor, constant: insets.left)
+            let constraint = source.leadingAnchor.constraint(equalTo: target.leadingAnchor, constant: insets.left, relation: relation)
             append(constraint, priority: priority)
         }
         if edges.contains(.right) {
-            let constraint = source.trailingAnchor.constraint(equalTo: target.trailingAnchor, constant: -insets.right)
+            let constraint = source.trailingAnchor.constraint(equalTo: target.trailingAnchor, constant: -insets.right, relation: relation)
             append(constraint, priority: priority)
         }
         if edges.contains(.top) {
-            let constraint = source.topAnchor.constraint(equalTo: target.topAnchor, constant: insets.top)
+            let constraint = source.topAnchor.constraint(equalTo: target.topAnchor, constant: insets.top, relation: relation)
             append(constraint, priority: priority)
         }
         if edges.contains(.bottom) {
-            let constraint = source.bottomAnchor.constraint(equalTo: target.bottomAnchor, constant: -insets.bottom)
+            let constraint = source.bottomAnchor.constraint(equalTo: target.bottomAnchor, constant: -insets.bottom, relation: relation)
             append(constraint, priority: priority)
         }
         return self
     }
 
-    func above(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin {
-        let constraint = source.bottomAnchor.constraint(equalTo: target.topAnchor, constant: -offset)
+    func above(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.bottomAnchor.constraint(equalTo: target.topAnchor, constant: -offset, relation: relation)
         append(constraint, priority: priority)
         return self
     }
 
-    func below(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin {
-        let constraint = source.topAnchor.constraint(equalTo: target.bottomAnchor, constant: offset)
+    func below(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.topAnchor.constraint(equalTo: target.bottomAnchor, constant: offset, relation: relation)
         append(constraint, priority: priority)
         return self
     }
 
-    func before(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin {
-        let constraint = source.trailingAnchor.constraint(equalTo: target.leadingAnchor, constant: -offset)
+    func before(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.trailingAnchor.constraint(equalTo: target.leadingAnchor, constant: -offset, relation: relation)
         append(constraint, priority: priority)
         return self
     }
 
-    func after(of target: LayoutArea, offset: CGFloat, priority: UILayoutPriority?) -> ViewPin {
-        let constraint = source.leadingAnchor.constraint(equalTo: target.trailingAnchor, constant: offset)
+    func after(of target: LayoutArea, offset: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.leadingAnchor.constraint(equalTo: target.trailingAnchor, constant: offset, relation: relation)
         append(constraint, priority: priority)
         return self
     }
@@ -230,8 +236,8 @@ private final class ViewPinImpl: ViewPin {
         return self
     }
 
-    func width(to constant: CGFloat, priority: UILayoutPriority?) -> ViewPin {
-        let constraint = source.widthAnchor.constraint(equalToConstant: constant)
+    func width(to constant: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.widthAnchor.constraint(equalToConstant: constant, relation: relation)
         append(constraint, priority: priority)
         return self
     }
@@ -248,8 +254,8 @@ private final class ViewPinImpl: ViewPin {
         return self
     }
 
-    func height(to constant: CGFloat, priority: UILayoutPriority?) -> ViewPin {
-        let constraint = source.heightAnchor.constraint(equalToConstant: constant)
+    func height(to constant: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.heightAnchor.constraint(equalToConstant: constant, relation: relation)
         append(constraint, priority: priority)
         return self
     }
@@ -295,3 +301,43 @@ public protocol LayoutArea {
 
 extension UIView: LayoutArea {}
 extension UILayoutGuide: LayoutArea {}
+
+// can't exntend NSLayoutAnchor because of objc <-> Swift limitations
+private extension NSLayoutXAxisAnchor {
+    func constraint(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat, relation: LayoutPinRelation) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return self.constraint(equalTo: anchor, constant: constant)
+        case .greater:
+            return self.constraint(greaterThanOrEqualTo: anchor, constant: constant)
+        case .less:
+            return self.constraint(lessThanOrEqualTo: anchor, constant: constant)
+        }
+    }
+}
+
+private extension NSLayoutYAxisAnchor {
+    func constraint(equalTo anchor: NSLayoutYAxisAnchor, constant: CGFloat, relation: LayoutPinRelation) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return self.constraint(equalTo: anchor, constant: constant)
+        case .greater:
+            return self.constraint(greaterThanOrEqualTo: anchor, constant: constant)
+        case .less:
+            return self.constraint(lessThanOrEqualTo: anchor, constant: constant)
+        }
+    }
+}
+
+private extension NSLayoutDimension {
+    func constraint(equalToConstant constant: CGFloat, relation: LayoutPinRelation) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return self.constraint(equalToConstant: constant)
+        case .greater:
+            return self.constraint(greaterThanOrEqualToConstant: constant)
+        case .less:
+            return self.constraint(lessThanOrEqualToConstant: constant)
+        }
+    }
+}
