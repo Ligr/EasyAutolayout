@@ -41,10 +41,16 @@ public protocol ViewPin {
     func width(to target: LayoutArea, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
+    func width(to target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin
+
+    @discardableResult
     func width(to constant: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
     func height(toWidth target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin
+
+    @discardableResult
+    func height(to target: LayoutArea, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin
 
     @discardableResult
     func height(to target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin
@@ -121,6 +127,11 @@ public extension ViewPin {
     }
 
     @discardableResult
+    func width(to target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.width(to: target, multiplier: multiplier, priority: priority)
+    }
+
+    @discardableResult
     func width(to constant: CGFloat = 0, relation: LayoutPinRelation = .equal, priority: UILayoutPriority? = nil) -> ViewPin {
         self.width(to: constant, relation: relation, priority: priority)
     }
@@ -131,7 +142,12 @@ public extension ViewPin {
     }
 
     @discardableResult
-    func height(to target: LayoutArea, multiplier: CGFloat = 0, priority: UILayoutPriority? = nil) -> ViewPin {
+    func height(to target: LayoutArea, insets: UIEdgeInsets = .zero, priority: UILayoutPriority? = nil) -> ViewPin {
+        self.height(to: target, insets: insets, priority: priority)
+    }
+
+    @discardableResult
+    func height(to target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority? = nil) -> ViewPin {
         self.height(to: target, multiplier: multiplier, priority: priority)
     }
 
@@ -236,6 +252,12 @@ private final class ViewPinImpl: ViewPin {
         return self
     }
 
+    func width(to target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: multiplier)
+        append(constraint, priority: priority)
+        return self
+    }
+
     func width(to constant: CGFloat, relation: LayoutPinRelation, priority: UILayoutPriority?) -> ViewPin {
         let constraint = source.widthAnchor.constraint(equalToConstant: constant, relation: relation)
         append(constraint, priority: priority)
@@ -244,6 +266,12 @@ private final class ViewPinImpl: ViewPin {
 
     func height(toWidth target: LayoutArea, multiplier: CGFloat, priority: UILayoutPriority?) -> ViewPin {
         let constraint = source.heightAnchor.constraint(equalTo: target.widthAnchor, multiplier: multiplier)
+        append(constraint, priority: priority)
+        return self
+    }
+
+    func height(to target: LayoutArea, insets: UIEdgeInsets, priority: UILayoutPriority?) -> ViewPin {
+        let constraint = source.heightAnchor.constraint(equalTo: target.heightAnchor, constant: -(insets.top + insets.bottom))
         append(constraint, priority: priority)
         return self
     }
@@ -302,7 +330,7 @@ public protocol LayoutArea {
 extension UIView: LayoutArea {}
 extension UILayoutGuide: LayoutArea {}
 
-// can't exntend NSLayoutAnchor because of objc <-> Swift limitations
+// can't extend NSLayoutAnchor because of objc <-> Swift limitations
 private extension NSLayoutXAxisAnchor {
     func constraint(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat, relation: LayoutPinRelation) -> NSLayoutConstraint {
         switch relation {
